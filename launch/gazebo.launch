@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- MAVROS posix SITL environment launch script -->
+    <!-- launches MAVROS, PX4 SITL, Gazebo environment, and spawns vehicle -->
+    <!-- vehicle pose -->
+    <param name="/use_sim_time" value="true" />
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="0"/>
+    <!-- vehicle model and world -->
+    <arg name="est" default="ekf2"/>
+    <arg name="vehicle" default="uuv_bluerov2_heavy"/>
+    <arg name="world" default="$(find bluerov2gazebo)/worlds/uuv_bluerov2_heavy.world"/>
+    <arg name="sdf" default="$(find bluerov2gazebo)/models/$(arg vehicle)/$(arg vehicle).sdf"/>
+
+    <!-- gazebo configs -->
+    <arg name="gui" default="true"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="true"/>
+    <arg name="paused" default="false"/>
+    <arg name="respawn_gazebo" default="false"/>
+    <!-- MAVROS configs -->
+    <arg name="fcu_url" default="udp://:14540@localhost:14557"/>
+    <arg name="respawn_mavros" default="false"/>
+    <!-- PX4 configs -->
+    <arg name="interactive" default="true"/>
+    <!-- PX4 SITL and Gazebo -->
+    <include file="$(find px4)/launch/posix_sitl.launch">
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="R" value="$(arg R)"/>
+        <arg name="P" value="$(arg P)"/>
+        <arg name="Y" value="$(arg Y)"/>
+        <arg name="world" value="$(arg world)"/>
+        <arg name="vehicle" value="$(arg vehicle)"/>
+        <arg name="sdf" value="$(arg sdf)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="interactive" value="$(arg interactive)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="respawn_gazebo" value="$(arg respawn_gazebo)"/>
+    </include>
+    <!-- MAVROS -->
+    <include file="$(find mavros)/launch/px4.launch">
+        <!-- GCS link is provided by SITL -->
+        <arg name="gcs_url" value=""/>
+        <arg name="fcu_url" value="$(arg fcu_url)"/>
+        <arg name="respawn_mavros" value="$(arg respawn_mavros)"/>
+    </include>
+
+    <!-- Start static tf_mapping -->
+    <node pkg="bluerov2common" type="static_tf.py" name="tf_static_mapping" output="screen" >
+    </node>
+
+    <!-- Start dynamic tf_mapping -->
+    <node pkg="bluerov2common" type="dynamic_tf.py" name="tf_dynamic_mapping" output="screen" >
+    </node>
+
+    <!-- Start remapping of laserscan to PCL -->
+    <node pkg="bluerov2common" type="laserScansToPCL" name="laserScansToPCL" output="screen" >
+    </node>
+    <!-- Start from rotating sonar to full sonar -->
+    <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" >
+    </node>
+
+
+
+</launch>

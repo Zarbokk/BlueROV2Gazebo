@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>bluerov2gazebo</name>
+    <description>
+        Gazebo data for BlueROV simulation
+    </description>
+    <version>0.0.11</version>
+    <license>BSD</license>
+    <author>Tim Hansen</author>
+    <maintainer email="t.hansen@jacobs-university.de">Tim Hansen</maintainer>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>gazebo_dev</depend>
+    <depend>gazebo_plugins</depend>
+    <depend>gazebo_ros</depend>
+    <depend>roscpp</depend>
+    <exec_depend>urdf</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+</package>

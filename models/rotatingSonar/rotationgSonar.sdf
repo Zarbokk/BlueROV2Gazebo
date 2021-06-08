@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+    <model name="rotatingSonar">
+                <!-- This is from the tutorial on the velodyne_hdl-32 of gazebo -->
+
+
+              <!-- Give the base link a unique name -->
+              <link name="rotating_sonar_base">
+
+                <!-- Offset the base by half the lenght of the cylinder -->
+                <pose>0 0 0.029335 0 0 0</pose>
+                <inertial>
+                      <mass>0.0001</mass>
+                      <inertia>
+                        <ixx>0.001087473</ixx>
+                        <iyy>0.001087473</iyy>
+                        <izz>0.001092437</izz>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyz>0</iyz>
+                      </inertia>
+                </inertial>
+
+                <!-- The visual is mostly a copy of the collision -->
+                <visual name="base_visual">
+                  <geometry>
+                    <cylinder>
+                      <radius>.04267</radius>
+                      <length>.05867</length>
+                    </cylinder>
+                  </geometry>
+                </visual>
+              </link>
+
+              <!-- Give the base link a unique name -->
+              <link name="rotating_sonar_top">
+                <inertial>
+                     <mass>0.0001</mass>
+                     <inertia>
+                       <ixx>0.000090623</ixx>
+                       <iyy>0.000090623</iyy>
+                       <izz>0.000091036</izz>
+                       <ixy>0</ixy>
+                       <ixz>0</ixz>
+                       <iyz>0</iyz>
+                     </inertia>
+                   </inertial>
+                <!-- Vertically offset the top cylinder by the length of the bottom
+                    cylinder and half the length of this cylinder. -->
+                <pose>0 0 0.095455 0 0 0</pose>
+
+
+                <!-- The visual is mostly a copy of the collision -->
+                <visual name="top_visual">
+                  <geometry>
+                    <cylinder>
+                      <radius>0.04267</radius>
+                      <length>0.07357</length>
+                    </cylinder>
+                  </geometry>
+                </visual>
+
+                <sensor type="ray" name="sensor">
+
+                  <!-- Position the ray sensor based on the specification. Also rotate
+                       it by 90 degrees around the X-axis so that the <horizontal> rays
+                       become vertical gpu_ray-->
+                      <pose>0 0 0 1.5707 0 0</pose>
+                      <visualize>true</visualize>
+                      <update_rate>20</update_rate><!-- sets number of points 5*x=nummberOfPoints-->
+                      <ray>
+                        <scan>
+                          <horizontal>
+                            <!-- The sonar uses 32 beams(samples) -0.18622663-->
+                            <samples>16</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.08622663</min_angle>
+                            <max_angle>0.08622663</max_angle>
+                          </horizontal>
+                        </scan>
+                        <!-- Range defines characteristics of an individual beam -->
+                        <range>
+                          <min>0.05</min>
+                          <max>70</max>
+                          <resolution>0.02</resolution>
+                        </range>
+                        <noise>
+                              <!-- Use gaussian noise -->
+                              <type>gaussian</type>
+                              <mean>0.0</mean>
+                              <stddev>0.1</stddev>
+                        </noise>
+                      </ray>
+                      <!-- plugin for ROS publishing of Ray -->
+                          <plugin name="sonar_ros_interface" filename="librotating_sonar_ros_plugin.so">
+                          <topicName>sonar/points</topicName>
+                          <frameName>map_ned</frameName>
+                          </plugin>
+                 </sensor>
+              </link>
+
+
+              <joint type="revolute" name="rotating_sonar_base_to_top_joint">
+                <pose>0 0 -0.036785 0 0 0</pose>
+                <parent>rotating_sonar_base</parent>
+                <child>rotating_sonar_top</child>
+                <axis>
+                  <xyz>0 0 1</xyz>
+                  <limit>
+                    <lower>-10000000000000000</lower>
+                    <upper>10000000000000000</upper>
+                  </limit>
+                </axis>
+              </joint>
+
+
+            <!-- plugin for ROS publishing of position and control of sonar -->
+          <plugin name="sonar_control" filename="librotating_sonar_control_plugin.so">
+              <velocity>1.25662</velocity>  <!-- velocity in rad/s -->
+        </plugin>
+
+    </model>
+</sdf>

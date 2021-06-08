@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- MAVROS configs -->
+    <arg name="fcu_url" default="udp://:14552@localhost:14557"/>
+    <arg name="respawn_mavros" default="false"/>
+    <!-- PX4 SITL and Gazebo -->
+
+    <include file="$(find mavros)/launch/px4.launch">
+        <!-- GCS link is provided by SITL -->
+        <arg name="gcs_url" value=""/>
+        <arg name="fcu_url" value="$(arg fcu_url)"/>
+        <arg name="respawn_mavros" value="$(arg respawn_mavros)"/>
+    </include>
+
+    <node pkg="bluerov2gazebo" type="mavproxy.py" name="mavproxy" clear_params="true" output="screen" args="--master=udp:127.0.0.1:14550 --out udp:127.0.0.1:14551 --out udp:127.0.0.1:14552" >
+    </node>
+
+
+</launch>
