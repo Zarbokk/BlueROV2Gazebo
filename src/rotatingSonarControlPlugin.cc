@@ -47,8 +47,8 @@ namespace gazebo {
             }
 
 
-            this->joint->SetParam("fmax",0, 100.0);
-            this->joint->SetParam("vel",0, velocity);
+//            this->joint->SetParam("fmax",0, 100.0);
+//            this->joint->SetParam("vel",0, velocity);
 
             boost::thread callback_laser_queue_thread_ = boost::thread(
                     boost::bind(&RotatingSonarControlPlugin::positionLaserPublishingThread, this));
@@ -77,7 +77,13 @@ namespace gazebo {
             ros::Publisher publisherAngleofSonar;
             publisherAngleofSonar = n_.advertise<std_msgs::Float64>("sonar/currentRelativeAngleSonar", 10);
             ros::Rate loop_rate(100);
+            int howFast = 5;//(small faster)
+            int numberOfSteps = 400;
+            int currentPosition = 0;
             while (ros::ok()) {
+                this->joint->SetPosition(0,2*M_PI*((double)currentPosition)/((double)(numberOfSteps*howFast)),true);
+
+
                 double currentAngle = this->joint->Position();
                 currentAngle = std::fmod(currentAngle, 2 * M_PI);
                 std_msgs::Float64 currentAngleMsg;
@@ -86,6 +92,10 @@ namespace gazebo {
                 ros::spinOnce();
                 //std::cerr << "CurrentAngle: "<< currentAngle <<"\n";
                 loop_rate.sleep();
+                currentPosition++;
+                if(currentPosition == numberOfSteps*howFast){
+                    currentPosition = 0;
+                }
             }
 //            while (true) {
 //                //std::cerr << "ConnectCb: "<< this->joint->Position() <<"\n";

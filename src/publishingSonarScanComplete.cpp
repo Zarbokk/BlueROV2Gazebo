@@ -35,7 +35,7 @@ public:
 
         pcl::transformPointCloud(*newScanCloud, *newScanCloud, shift, quatRot90Degree);
 
-        Eigen::AngleAxisf rotationVectorCurrentAngle(currentAngle, Eigen::Vector3f(0, 0, 1));
+        Eigen::AngleAxisf rotationVectorCurrentAngle(this->currentAngle, Eigen::Vector3f(0, 0, 1));
         Eigen::Quaternionf quatRotCurrentAngle(rotationVectorCurrentAngle.toRotationMatrix());
 
         //std::cout << myCloud->size() << std::endl;
@@ -44,7 +44,7 @@ public:
         pointsToRemove(*newScanCloud);
         fullScanCloud +=*newScanCloud;
 
-        if(currentAngle-lastAngle<0){//@TODO evtl noch falsch sollte was cooles her
+        if(this->currentAngle-lastAngle<0){//@TODO evtl noch falsch sollte was cooles her
             sensor_msgs::PointCloud2 cloud_msg;
             pcl::toROSMsg(fullScanCloud, cloud_msg);
             cloud_msg.header.frame_id = "rotating_sonar_bot";
@@ -55,7 +55,7 @@ public:
 //                currentAngle = 0;
 //            }
         }
-        lastAngle = currentAngle;
+        lastAngle = this->currentAngle;
 
     }
 
@@ -91,7 +91,7 @@ public:
     }
 
     void callbackAngle(const std_msgs::Float64::ConstPtr &msg) {
-        currentAngle = msg->data;
+        this->currentAngle = msg->data;
     }
 
 private:

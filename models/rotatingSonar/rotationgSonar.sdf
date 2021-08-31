@@ -77,6 +77,12 @@
                             <min_angle>-0.08622663</min_angle>
                             <max_angle>0.08622663</max_angle>
                           </horizontal>
+                          <vertical>
+                              <samples>8</samples>
+                              <resolution>1</resolution>
+                              <min_angle>-0.03</min_angle>
+                              <max_angle>0.03</max_angle>
+                          </vertical>
                         </scan>
                         <!-- Range defines characteristics of an individual beam -->
                         <range>

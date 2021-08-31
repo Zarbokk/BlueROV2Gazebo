@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(bluerov2gazebo)
 
-find_package(catkin REQUIRED COMPONENTS gazebo_dev gazebo_plugins gazebo_ros roscpp std_msgs pcl_ros)
+find_package(catkin REQUIRED COMPONENTS gazebo_dev gazebo_plugins gazebo_ros roscpp std_msgs pcl_ros ping360_sonar)
 find_package(gazebo REQUIRED)
 find_package(PCL 1.10 REQUIRED COMPONENTS common io visualization)
 
@@ -41,7 +41,7 @@ target_link_libraries(rotating_sonar_control_plugin ${GAZEBO_LIBRARIES} ${catkin
 add_library(rotating_sonar_ros_plugin SHARED src/rotatingSonarRosPlugin.cc)
 target_link_libraries(rotating_sonar_ros_plugin ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} RayPlugin)
 
-add_executable(pcl_sonar_grab_full_scan src/publishingSonarScanComplete.cpp)
+add_executable(pcl_sonar_grab_full_scan src/publishingSonarScanCompleteNew.cpp)
 target_link_libraries(pcl_sonar_grab_full_scan ${catkin_LIBRARIES})
 
 add_executable(generate_dataset_gazebo src/generateDatasetGazebo.cpp)
