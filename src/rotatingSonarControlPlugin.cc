@@ -77,7 +77,7 @@ namespace gazebo {
             ros::Publisher publisherAngleofSonar;
             publisherAngleofSonar = n_.advertise<std_msgs::Float64>("sonar/currentRelativeAngleSonar", 10);
             ros::Rate loop_rate(100);
-            int howFast = 5;//(small faster)
+            int howFast = 2;//(small faster)
             int numberOfSteps = 400;
             int currentPosition = 0;
             while (ros::ok()) {

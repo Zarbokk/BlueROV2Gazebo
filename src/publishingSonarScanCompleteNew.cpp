@@ -23,7 +23,7 @@ public:
         this->intensityPublisher = n_.advertise<ping360_sonar::SonarEcho>("sonar/intensity", 10);
         this->lastAngle = 0;
         this->nextDesiredAngle = 0;
-        this->numberOfAngles = 100;
+        this->numberOfAngles = 400;
         this->fullScanCloud = pcl::PointCloud<pcl::PointXYZ>();
         this->savePoints = false;
         this->mt = std::mt19937(rd());
@@ -111,6 +111,7 @@ public:
                 cloud_msg.header.frame_id = "rotating_sonar_bot";
                 cloud_msg.header.stamp = ros::Time::now();
                 this->demoPublisher_.publish(cloud_msg);
+                //std::cout << cloud_msg.row_step << std::endl;
                 this->fullScanCloud = pcl::PointCloud<pcl::PointXYZ>();
             }
             this->nextDesiredAngle = this->nextDesiredAngle + 2 * M_PI / this->numberOfAngles;
@@ -131,10 +132,11 @@ public:
 
 
         double outputArray[100];
+        int sizeOfArrays = 100;
         ping360_sonar::SonarEcho msg;
         msg.header.stamp = ros::Time::now();
         msg.range = 40;
-        msg.number_of_samples = 100;
+        msg.number_of_samples = sizeOfArrays;
         msg.angle = angle;
 
 
@@ -143,7 +145,7 @@ public:
         for (int i = 0 ; i<howOftenAddRandomPoints ; i++){
             addedRandomAtPos.push_back((int)this->randomNumberWhereError(this->mt));
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < sizeOfArrays; i++) {
             outputArray[i] = 0;
             double currentPosition = ((double) i) * (((double) msg.range) / ((double) msg.number_of_samples));
             for (int j = 0; j < inputPointCloud.size(); j++) {
