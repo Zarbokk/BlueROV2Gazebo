@@ -54,18 +54,18 @@
     </include>
 
     <!-- Start static tf_mapping -->
-    <node pkg="bluerov2common" type="static_tf.py" name="tf_static_mapping" output="screen" >
+    <node pkg="bluerov2common" type="static_tf.py" name="tf_static_mapping" output="screen" required="true">
     </node>
 
     <!-- Start dynamic tf_mapping -->
-    <node pkg="bluerov2common" type="dynamic_tf.py" name="tf_dynamic_mapping" output="screen" >
+    <node pkg="bluerov2common" type="dynamic_tf.py" name="tf_dynamic_mapping" output="screen" required="true">
     </node>
 
     <!-- Start remapping of laserscan to PCL -->
-    <node pkg="bluerov2common" type="laserScansToPCL" name="laserScansToPCL" output="screen" >
+    <node pkg="bluerov2common" type="laserScansToPCL" name="laserScansToPCL" output="screen" required="true">
     </node>
     <!-- Start from rotating sonar to full sonar -->
-    <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" >
+    <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" required="true">
     </node>
 
 </launch>
