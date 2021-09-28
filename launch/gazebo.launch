@@ -68,4 +68,8 @@
     <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" required="true">
     </node>
 
+    <!-- Start general conbversion to frd -->
+    <node pkg="bluerov2common" type="conversionenutofrd" name="conversionenutofrd" output="screen" required="true">
+    </node>
+
 </launch>
