@@ -77,7 +77,7 @@ public:
         y = y/((float)j);
         std::sort(xVector.begin(), xVector.end());
         std::sort(yVector.begin(), yVector.end());
-        int position = (int)(xVector.size()/2.0);
+        int position = (int)(xVector.size()/2.0);//currently uses the median point as reference.
         if(xVector.size()>0){
             x = xVector[position];
             y = yVector[position];
@@ -86,6 +86,7 @@ public:
             pcl::PointXYZ newPoint;
             newPoint.x=x;
             newPoint.y=y;
+            newPoint.z=0;
             pointCloud.push_back(newPoint);
         }
     }

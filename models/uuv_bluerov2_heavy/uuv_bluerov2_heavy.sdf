@@ -255,7 +255,7 @@
             <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
             <rotorVelocitySlowdownSim>0.025</rotorVelocitySlowdownSim>
         </plugin>
-
+<!-- test of strong side thruster 1e-10 -->
         <link name="thruster2">
             <pose>0.14 0.10 0 0 1.570796 -0.78539815</pose>
             <inertial>
