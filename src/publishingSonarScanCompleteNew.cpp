@@ -128,16 +128,16 @@ public:
         //calculate intensities by gaussian over every point. Add a few random gaussians somewhere
         // add gaussians at the beginning with random.
 
-        double std = 3;
+        double std = 0.4;
 
 
-        double outputArray[100];
-        int sizeOfArrays = 100;
+        double outputArray[200];
+        int sizeOfArrays = 200;
         ping360_sonar::SonarEcho msg;
         msg.header.stamp = ros::Time::now();
         msg.range = 40;
         msg.number_of_samples = sizeOfArrays;
-        msg.angle = angle;
+        msg.angle = angle/M_PI*200;
 
 
         int howOftenAddRandomPoints = (int)this->randomNumberOfErrors(this->mt);
@@ -162,7 +162,7 @@ public:
                 outputArray[i] += this->gaussianOutput(a, std * 0.5, currentPosition);
             }
 
-
+            outputArray[i]+=i*0.01;
             msg.intensities.push_back((unsigned char) ((int) outputArray[i]));
         }
 

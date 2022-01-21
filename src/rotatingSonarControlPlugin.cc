@@ -81,13 +81,13 @@ namespace gazebo {
             int numberOfSteps = 400;
             int currentPosition = 0;
             while (ros::ok()) {
-                this->joint->SetPosition(0,2*M_PI*((double)currentPosition)/((double)(numberOfSteps*howFast)),true);
+                this->joint->SetPosition(0,2*M_PI*(1.0-(double)(currentPosition)/((double)(numberOfSteps*howFast))),true);
 
 
                 double currentAngle = this->joint->Position();
                 currentAngle = std::fmod(currentAngle, 2 * M_PI);
                 std_msgs::Float64 currentAngleMsg;
-                currentAngleMsg.data = currentAngle;
+                currentAngleMsg.data = 2 * M_PI-currentAngle;
                 publisherAngleofSonar.publish(currentAngleMsg);
                 ros::spinOnce();
                 //std::cerr << "CurrentAngle: "<< currentAngle <<"\n";

@@ -72,4 +72,11 @@
     <node pkg="bluerov2common" type="conversionenutofrd" name="conversionenutofrd" output="screen" required="true">
     </node>
 
+    <!-- Start the EKF for state estimation -->
+    <node pkg="underwaterslam" type="EKFDVL" name="EKFDVL" output="screen" required="false">
+    </node>
+
+    <node pkg="ping360_sonar" type="conversionSonarData" name="conversionSonarData" output="screen" required="true">
+    </node>
+
 </launch>
