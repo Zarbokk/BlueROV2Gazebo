@@ -136,6 +136,7 @@ public:
         ping360_sonar::SonarEcho msg;
         msg.header.stamp = ros::Time::now();
         msg.range = 40;
+        msg.step_size = 1;
         msg.number_of_samples = sizeOfArrays;
         msg.angle = angle/M_PI*200;
 
