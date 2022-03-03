@@ -10,6 +10,7 @@
     <maintainer email="t.hansen@jacobs-university.de">Tim Hansen</maintainer>
 
     <buildtool_depend>catkin</buildtool_depend>
+    <buildtool_depend>commonbluerovmsg</buildtool_depend>
     <depend>gazebo_dev</depend>
     <depend>gazebo_plugins</depend>
     <depend>gazebo_ros</depend>

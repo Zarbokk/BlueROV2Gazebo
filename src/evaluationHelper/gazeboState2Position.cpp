@@ -3,7 +3,7 @@
 //
 #include "ros/ros.h"
 #include "gazebo_msgs/ModelStates.h"
-#include "bluerov2common/staterobotforevaluation.h"
+#include "commonbluerovmsg/staterobotforevaluation.h"
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include <Eigen/Geometry>
 #include <Eigen/StdVector>
@@ -71,7 +71,7 @@ void callbackGazebo(const gazebo_msgs::ModelStates::ConstPtr &msg) {
     Eigen::Vector3d rpy= getRollPitchYaw(newRot);
 
 
-    bluerov2common::staterobotforevaluation publishingMsg;
+    commonbluerovmsg::staterobotforevaluation publishingMsg;
     publishingMsg.header.stamp = ros::Time::now();
     publishingMsg.xPosition = transformationOfPose(0, 3);
     publishingMsg.yPosition = transformationOfPose(1, 3);
@@ -87,7 +87,7 @@ void callbackGazebo(const gazebo_msgs::ModelStates::ConstPtr &msg) {
 
 void callbackEKF(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr &msg) {
 
-    bluerov2common::staterobotforevaluation publishingMsg;
+    commonbluerovmsg::staterobotforevaluation publishingMsg;
     publishingMsg.header.stamp = ros::Time::now();
     publishingMsg.xPosition = msg->pose.pose.position.x;
     publishingMsg.yPosition = msg->pose.pose.position.y;
@@ -114,8 +114,8 @@ int main(int argc, char **argv) {
     transformationFromGazeboToNED(3, 3) = 1;
 
 
-    publisherGazeboData = n_.advertise<bluerov2common::staterobotforevaluation>("positionGT", 1000);
-    publisherStateEstimationData = n_.advertise<bluerov2common::staterobotforevaluation>("positionEstimated", 1000);
+    publisherGazeboData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionGT", 1000);
+    publisherStateEstimationData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionEstimated", 1000);
     ros::Subscriber subscriberGazebo = n_.subscribe("gazebo/model_states", 1000, &callbackGazebo);
     ros::Subscriber subscriberStateEstimator = n_.subscribe("publisherPoseEkf", 1000, &callbackEKF);
     ros::spin();
