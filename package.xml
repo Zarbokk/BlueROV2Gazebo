@@ -16,7 +16,6 @@
     <depend>ping360_sonar</depend>
     <depend>bluerov2common</depend>
     <depend>roscpp</depend>
-    <depend>bluerov2common</depend>
   
     <exec_depend>urdf</exec_depend>
     <exec_depend>xacro</exec_depend>
