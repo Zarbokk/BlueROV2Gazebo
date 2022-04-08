@@ -122,7 +122,7 @@
 
             <!-- plugin for ROS publishing of position and control of sonar -->
           <plugin name="sonar_control" filename="librotating_sonar_control_plugin.so">
-              <velocity>1.25662</velocity>  <!-- velocity in rad/s -->
+              <velocity>5.51324</velocity>  <!-- velocity in rad/s 1.25662 the number is currently useless-->
         </plugin>
 
     </model>

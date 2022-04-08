@@ -74,6 +74,7 @@
 
     <!-- Start the EKF for state estimation -->
     <node pkg="underwaterslam" type="EKFDVL" name="EKFDVL" output="screen" required="false">
+            <param name="/imu_used"  type="str" value="px4" />
     </node>
 
     <node pkg="ping360_sonar" type="conversionSonarData" name="conversionSonarData" output="screen" required="true">
