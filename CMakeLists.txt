@@ -49,3 +49,6 @@ target_link_libraries(generate_dataset_gazebo ${catkin_LIBRARIES})
 
 add_executable(evaluationgazboposition src/evaluationHelper/gazeboState2Position.cpp)
 target_link_libraries(evaluationgazboposition ${catkin_LIBRARIES})
+
+add_executable(dvlSimulation src/simulationDVL.cpp)
+target_link_libraries(dvlSimulation ${catkin_LIBRARIES})
