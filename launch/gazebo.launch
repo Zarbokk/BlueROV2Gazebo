@@ -85,4 +85,8 @@
     <node pkg="bluerov2gazebo" type="dvlSimulation" name="dvlSimulation" output="screen" required="false">
     </node>
 
+    <!-- baro simulation -->
+    <node pkg="bluerov2common" type="mavrosHeightCalculation" name="mavrosHeightCalculation" output="screen" required="false">
+    </node>
+
 </launch>
