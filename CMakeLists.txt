@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CATKIN_ENABLE_TESTING OFF)
 project(bluerov2gazebo)
 
 find_package(catkin REQUIRED COMPONENTS gazebo_dev gazebo_plugins gazebo_ros roscpp std_msgs pcl_ros ping360_sonar bluerov2common commonbluerovmsg)
