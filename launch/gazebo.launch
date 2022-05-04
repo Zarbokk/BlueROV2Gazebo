@@ -61,12 +61,11 @@
     <node pkg="bluerov2common" type="dynamic_tf.py" name="tf_dynamic_mapping" output="screen" required="true">
     </node>
 
-    <!-- Start remapping of laserscan to PCL -->
+    <!-- Start remapping of laserscan to PCL
     <node pkg="bluerov2common" type="laserScansToPCL" name="laserScansToPCL" output="screen" required="true">
-    </node>
-    <!-- Start from rotating sonar to full sonar -->
-    <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" required="true">
-    </node>
+    </node>-->
+
+
 
     <!-- Start general conbversion to frd -->
     <node pkg="bluerov2common" type="conversionenutofrd" name="conversionenutofrd" output="screen" required="true">
@@ -78,8 +77,6 @@
             <param name="/dvl_used"  type="str" value="gazebo" />
     </node>
 
-    <node pkg="ping360_sonar" type="conversionSonarData" name="conversionSonarData" output="screen" required="true">
-    </node>
 
         <!-- DVL simulation(currently without noise)-->
     <node pkg="bluerov2gazebo" type="dvlSimulation" name="dvlSimulation" output="screen" required="false">
@@ -89,5 +86,13 @@
     <node pkg="bluerov2common" type="mavrosHeightCalculation" name="mavrosHeightCalculation" output="screen" required="false">
                 <param name="/height_mode"  type="str" value="simulation" />
     </node>
+
+    <!-- Start from rotating sonar to full sonar -->
+    <node pkg="ping360_sonar" type="conversionSonarData" name="conversionSonarData" output="screen" required="false">
+    </node>
+
+    <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" required="false">
+    </node>
+
 
 </launch>

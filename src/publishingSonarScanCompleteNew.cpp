@@ -19,7 +19,7 @@ public:
     SonarScanComplete(const std::string &publishName, const std::string &subscribeAngleName,
                       const std::string &subscribePointCloudName) {
         //Topic you want to publish "cloud_topic";
-        this->demoPublisher_ = n_.advertise<sensor_msgs::PointCloud2>(publishName, 10);
+        //this->demoPublisher_ = n_.advertise<sensor_msgs::PointCloud2>(publishName, 10);
         this->intensityPublisher = n_.advertise<ping360_sonar::SonarEcho>("sonar/intensity", 10);
         this->lastAngle = 0;
         this->nextDesiredAngle = 0;
@@ -30,8 +30,7 @@ public:
         this->randomNumberOfErrors = std::uniform_real_distribution<double>(0, 5);
         this->randomNumberWhereError = std::uniform_real_distribution<double>(1.0, 40.0);
         //Topic you want to subscribe
-        this->subPointCloud_ = n_.subscribe(subscribePointCloudName, 1000, &SonarScanComplete::callbackPointcloud,
-                                            this);
+        this->subPointCloud_ = n_.subscribe(subscribePointCloudName, 1000, &SonarScanComplete::callbackPointcloud,this);
         this->subAngle_ = n_.subscribe(subscribeAngleName, 1000, &SonarScanComplete::callbackAngle, this);
     }
 
@@ -40,6 +39,7 @@ public:
     }
 
     void callbackPointcloud(const sensor_msgs::PointCloud2ConstPtr &msg) {
+//        std::cout << "pclCallback" << std::endl;
         pcl::fromROSMsg(*msg, this->currentScannedPoints);
     }
 
@@ -78,10 +78,11 @@ public:
 
     void callbackAngle(const std_msgs::Float64::ConstPtr &msg) {
         this->currentAngle = msg->data;
+//        std::cout << "angle callback" << std::endl;
 //        std::cout << "the current desired Angle: " << this->nextDesiredAngle << "the current Angle: "
 //                  << this->currentAngle << std::endl;
-        if ((this->currentAngle - this->nextDesiredAngle) >= 0 &&
-            abs((this->currentAngle - this->nextDesiredAngle)) < 2 * M_PI / this->numberOfAngles) {
+//        if ((this->currentAngle - this->nextDesiredAngle) >= 0 &&
+//            abs((this->currentAngle - this->nextDesiredAngle)) < 2 * M_PI / this->numberOfAngles) {
 
             pcl::PointCloud<pcl::PointXYZ>::Ptr newScanCloud(new pcl::PointCloud<pcl::PointXYZ>);
             Eigen::AngleAxisf rotationVector90Degree(M_PI_2, Eigen::Vector3f(1, 0, 0));
@@ -90,35 +91,35 @@ public:
             *newScanCloud = this->currentScannedPoints;
             pcl::transformPointCloud(*newScanCloud, *newScanCloud, shift, quatRot90Degree);
 
-            publishingOfIntensitySonar(*newScanCloud, this->nextDesiredAngle);
+            publishingOfIntensitySonar(*newScanCloud, this->currentAngle);
 
 
-            Eigen::AngleAxisf rotationVectorCurrentAngle(this->currentAngle, Eigen::Vector3f(0, 0, 1));
-            Eigen::Quaternionf quatRotCurrentAngle(rotationVectorCurrentAngle.toRotationMatrix());
-
-            //std::cout << myCloud->size() << std::endl;
-
-            pcl::transformPointCloud(*newScanCloud, *newScanCloud, shift, quatRotCurrentAngle);
-            this->pointsToRemove(*newScanCloud);
-            fullScanCloud += *newScanCloud;
-
-            if (abs(2 * M_PI - this->currentAngle) <=
-                2 * M_PI / this->numberOfAngles + 0.001) {
-//                std::cout << " Publish Scan " << std::endl;
-                //publish complete scan
-                sensor_msgs::PointCloud2 cloud_msg;
-                pcl::toROSMsg(fullScanCloud, cloud_msg);
-                cloud_msg.header.frame_id = "rotating_sonar_bot";
-                cloud_msg.header.stamp = ros::Time::now();
-                this->demoPublisher_.publish(cloud_msg);
-                //std::cout << cloud_msg.row_step << std::endl;
-                this->fullScanCloud = pcl::PointCloud<pcl::PointXYZ>();
-            }
-            this->nextDesiredAngle = this->nextDesiredAngle + 2 * M_PI / this->numberOfAngles;
-            if (abs(this->nextDesiredAngle - 2 * M_PI) < 0.0001) {
-                this->nextDesiredAngle = 0;
-            }
-        }
+//            Eigen::AngleAxisf rotationVectorCurrentAngle(this->currentAngle, Eigen::Vector3f(0, 0, 1));
+//            Eigen::Quaternionf quatRotCurrentAngle(rotationVectorCurrentAngle.toRotationMatrix());
+//
+//            //std::cout << myCloud->size() << std::endl;
+//
+//            pcl::transformPointCloud(*newScanCloud, *newScanCloud, shift, quatRotCurrentAngle);
+//            this->pointsToRemove(*newScanCloud);
+//            fullScanCloud += *newScanCloud;
+//
+//            if (abs(2 * M_PI - this->currentAngle) <=
+//                2 * M_PI / this->numberOfAngles + 0.001) {
+////                std::cout << " Publish Scan " << std::endl;
+//                //publish complete scan
+//                sensor_msgs::PointCloud2 cloud_msg;
+//                pcl::toROSMsg(fullScanCloud, cloud_msg);
+//                cloud_msg.header.frame_id = "rotating_sonar_bot";
+//                cloud_msg.header.stamp = ros::Time::now();
+//                this->demoPublisher_.publish(cloud_msg);
+//                //std::cout << cloud_msg.row_step << std::endl;
+//                this->fullScanCloud = pcl::PointCloud<pcl::PointXYZ>();
+//            }
+//            this->nextDesiredAngle = this->nextDesiredAngle + 2 * M_PI / this->numberOfAngles;
+//            if (abs(this->nextDesiredAngle - 2 * M_PI) < 0.0001) {
+//                this->nextDesiredAngle = 0;
+//            }
+//        }
     }
 
     void publishingOfIntensitySonar(pcl::PointCloud<pcl::PointXYZ> inputPointCloud, double angle) {
@@ -138,8 +139,8 @@ public:
         msg.range = 40;
         msg.step_size = 1;
         msg.number_of_samples = sizeOfArrays;
-        msg.angle = angle/M_PI*200;
-
+        msg.angle = angle/M_PI*200.0;
+        //std::cout << angle << std::endl;
 
         int howOftenAddRandomPoints = (int)this->randomNumberOfErrors(this->mt);
         std::vector<int> addedRandomAtPos;
@@ -167,13 +168,13 @@ public:
             msg.intensities.push_back((unsigned char) ((int) outputArray[i]));
         }
 
-
+        //std::cout<< "publishing intensities: "<< std::endl;
         this->intensityPublisher.publish(msg);
     }
 
 private:
     ros::NodeHandle n_;
-    ros::Publisher demoPublisher_, intensityPublisher;
+    ros::Publisher intensityPublisher;
     ros::Subscriber subPointCloud_, subAngle_;
     double currentAngle, lastAngle, nextDesiredAngle;
     bool savePoints;
