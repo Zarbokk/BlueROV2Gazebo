@@ -74,10 +74,18 @@ public:
             pointCloud.push_back(newPoint);
         }
     }
-
+    double angleDiff(double first, double second) {//first-second
+        return atan2(sin(first - second), cos(first - second));
+    }
 
     void callbackAngle(const std_msgs::Float64::ConstPtr &msg) {
+        double angleStepSize = abs(angleDiff(this->currentAngle,this->lastAngle))*200/M_PI;
+        if (angleStepSize >10 ){
+            angleStepSize=1;
+        }
         this->currentAngle = msg->data;
+        this->lastAngle = this->currentAngle;
+
 //        std::cout << "angle callback" << std::endl;
 //        std::cout << "the current desired Angle: " << this->nextDesiredAngle << "the current Angle: "
 //                  << this->currentAngle << std::endl;
@@ -91,7 +99,7 @@ public:
             *newScanCloud = this->currentScannedPoints;
             pcl::transformPointCloud(*newScanCloud, *newScanCloud, shift, quatRot90Degree);
 
-            publishingOfIntensitySonar(*newScanCloud, this->currentAngle);
+            publishingOfIntensitySonar(*newScanCloud, this->currentAngle,angleStepSize);
 
 
 //            Eigen::AngleAxisf rotationVectorCurrentAngle(this->currentAngle, Eigen::Vector3f(0, 0, 1));
@@ -122,7 +130,7 @@ public:
 //        }
     }
 
-    void publishingOfIntensitySonar(pcl::PointCloud<pcl::PointXYZ> inputPointCloud, double angle) {
+    void publishingOfIntensitySonar(pcl::PointCloud<pcl::PointXYZ> inputPointCloud, double angle, double angleStepSize) {
         // array of 100
         //start intensity output
         //first copy cloud
@@ -137,7 +145,7 @@ public:
         ping360_sonar::SonarEcho msg;
         msg.header.stamp = ros::Time::now();
         msg.range = 40;
-        msg.step_size = 40.0/200.0;
+        msg.step_size = angleStepSize;
         msg.number_of_samples = sizeOfArrays;
         msg.angle = angle/M_PI*200.0;
         //std::cout << angle << std::endl;
