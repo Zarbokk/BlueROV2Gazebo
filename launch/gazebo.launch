@@ -72,7 +72,7 @@
     </node>
 
     <!-- Start the EKF for state estimation -->
-    <node pkg="underwaterslam" type="EKFDVL" name="EKFDVL" output="screen" required="false">
+    <node pkg="bluerov2common" type="EKFDVL" name="EKFDVL" output="screen" required="true">
             <param name="/imu_used"  type="str" value="mavros" />
             <param name="/dvl_used"  type="str" value="gazebo" />
     </node>
