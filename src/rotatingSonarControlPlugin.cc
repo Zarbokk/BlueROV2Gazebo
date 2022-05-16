@@ -27,6 +27,10 @@ namespace gazebo {
         /// attached to.
         /// \param[in] _sdf A pointer to the plugin's SDF element.
         virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
+            this->positiveDirection = true;
+            if (_sdf->HasElement("positiveRotatingDirection"))
+                this->positiveDirection = _sdf->Get<bool>("positiveRotatingDirection");//always NED
+
             double velocity = 0;//default velocity this is rad/s
             if (_sdf->HasElement("velocity"))
                 velocity = _sdf->Get<double>("velocity");
@@ -56,7 +60,7 @@ namespace gazebo {
 
     private:
 
-
+        bool positiveDirection;
         /// \brief Pointer to the model.
         physics::ModelPtr model;
 
@@ -76,12 +80,16 @@ namespace gazebo {
             ros::NodeHandle n_;
             ros::Publisher publisherAngleofSonar;
             publisherAngleofSonar = n_.advertise<std_msgs::Float64>("sonar/currentRelativeAngleSonar", 10);
-            ros::Rate loop_rate(15);// old was 100
+            ros::Rate loop_rate(30);// old was 100 the higher frequency the faster
             int howFast = 1;//(small faster) old was 4
             int numberOfSteps = 400;
-            int currentPosition = 0;
+            int currentPosition = 1;
             while (ros::ok()) {
-                this->joint->SetPosition(0,2*M_PI*(1.0-(double)(currentPosition)/((double)(numberOfSteps*howFast))),true);
+                if (this->positiveDirection){
+                    this->joint->SetPosition(0,2*M_PI*(1.0-(double)(currentPosition)/((double)(numberOfSteps*howFast))),true);
+                }else{
+                    this->joint->SetPosition(0,2*M_PI*(1.0-(double)((numberOfSteps*howFast)-currentPosition)/((double)(numberOfSteps*howFast))),true);
+                }
 
 
                 double currentAngle = this->joint->Position();
