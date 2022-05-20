@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CATKIN_ENABLE_TESTING OFF)
 project(bluerov2gazebo)
 
-find_package(catkin REQUIRED COMPONENTS gazebo_dev gazebo_plugins gazebo_ros roscpp std_msgs pcl_ros ping360_sonar bluerov2common commonbluerovmsg)
+find_package(catkin REQUIRED COMPONENTS gazebo_dev gazebo_plugins gazebo_ros roscpp ping360_sonar std_msgs pcl_ros bluerov2common commonbluerovmsg)
 find_package(gazebo REQUIRED)
 find_package(PCL 1.10 REQUIRED COMPONENTS common io visualization)
 

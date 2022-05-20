@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <ros/ros.h>
-#include "ping360_sonar/SonarEcho.h"
+#include "commonbluerovmsg/SonarEcho2.h"
 #include <random>
 #include <pcl/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
@@ -20,7 +20,7 @@ public:
                       const std::string &subscribePointCloudName) {
         //Topic you want to publish "cloud_topic";
         //this->demoPublisher_ = n_.advertise<sensor_msgs::PointCloud2>(publishName, 10);
-        this->intensityPublisher = n_.advertise<ping360_sonar::SonarEcho>("sonar/intensity", 10);
+        this->intensityPublisher = n_.advertise<commonbluerovmsg::SonarEcho2>("sonar/intensity", 10);
         this->lastAngle = 0;
         this->nextDesiredAngle = 0;
         this->numberOfAngles = 400;
@@ -142,7 +142,7 @@ public:
 
         double outputArray[200];
         int sizeOfArrays = 200;
-        ping360_sonar::SonarEcho msg;
+        commonbluerovmsg::SonarEcho2 msg;
         msg.header.stamp = ros::Time::now();
         msg.range = 40;
         msg.step_size = angleStepSize;
