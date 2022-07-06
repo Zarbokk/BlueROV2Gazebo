@@ -11,6 +11,7 @@
 #include <tf2/LinearMath/Quaternion.h>
 #include "geometry_msgs/Vector3Stamped.h"
 #include "thread"
+#include "random"
 ros::Publisher publisherGazeboData, publisherStateEstimationData;
 
 Eigen::Matrix4d transformationFromGazeboToNED = Eigen::Matrix4d::Identity();
@@ -84,6 +85,14 @@ int main(int argc, char **argv) {
     ros::start();
     ros::NodeHandle n_;
 
+    std::mt19937 mt;
+    std::normal_distribution<double> addRandomNoiseToDVL = std::normal_distribution<double>(0, 0.01);;
+
+
+
+
+
+
     Eigen::AngleAxisd rotX180(180.0 / 180.0 * 3.14159, Eigen::Vector3d(1, 0, 0));
     //Eigen::AngleAxisd rotz90(90.0 / 180.0 * 3.14159, Eigen::Vector3d(0, 0, 1));
     transformationFromGazeboToNED.block<3, 3>(0,
@@ -103,9 +112,9 @@ int main(int argc, char **argv) {
     while(ros::ok()){
         geometry_msgs::Vector3Stamped publishingMsg;
         publishingMsg.header.stamp = ros::Time::now();
-        publishingMsg.vector.x = linarVelocityBodyNED.x();
-        publishingMsg.vector.y = linarVelocityBodyNED.y();
-        publishingMsg.vector.z = linarVelocityBodyNED.z();
+        publishingMsg.vector.x = linarVelocityBodyNED.x()+addRandomNoiseToDVL(mt);
+        publishingMsg.vector.y = linarVelocityBodyNED.y()+addRandomNoiseToDVL(mt);
+        publishingMsg.vector.z = linarVelocityBodyNED.z()+addRandomNoiseToDVL(mt);
         publisherGazeboData.publish(publishingMsg);
         ourRate.sleep();
     }

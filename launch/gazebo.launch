@@ -94,5 +94,7 @@
     <node pkg="bluerov2gazebo" type="pcl_sonar_grab_full_scan" name="pcl_sonar_grab_full_scan" output="screen" required="false">
     </node>
 
+    <node pkg="bluerov2gazebo" type="evaluationgazboposition" name="evaluationgazboposition" output="screen" required="false">
+    </node>
 
 </launch>
