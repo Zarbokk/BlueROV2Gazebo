@@ -114,8 +114,8 @@ int main(int argc, char **argv) {
     transformationFromGazeboToNED(3, 3) = 1;
 
 
-    publisherGazeboData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionGT", 1000);
-    publisherStateEstimationData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionEstimated", 1000);
+    publisherGazeboData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionGT", 1);
+    publisherStateEstimationData = n_.advertise<commonbluerovmsg::staterobotforevaluation>("positionEstimated", 1);
     ros::Subscriber subscriberGazebo = n_.subscribe("gazebo/model_states", 1000, &callbackGazebo);
     ros::Subscriber subscriberStateEstimator = n_.subscribe("publisherPoseEkf", 1000, &callbackEKF);
     ros::spin();
