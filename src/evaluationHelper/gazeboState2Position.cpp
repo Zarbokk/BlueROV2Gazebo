@@ -13,7 +13,7 @@
 ros::Publisher publisherGazeboData, publisherStateEstimationData;
 
 Eigen::Matrix4d transformationFromGazeboToNED = Eigen::Matrix4d::Identity();
-
+bool currentGT = true;
 
 Eigen::Vector3d getRollPitchYaw(Eigen::Quaterniond quat) {
     tf2::Quaternion tmp(quat.x(), quat.y(), quat.z(), quat.w());
@@ -44,6 +44,12 @@ Eigen::Quaterniond getQuaternionFromRPY(double roll, double pitch, double yaw) {
 
 
 void callbackGazebo(const gazebo_msgs::ModelStates::ConstPtr &msg) {
+    if(currentGT){
+        currentGT = false;
+        return;
+    }
+    currentGT = true;
+
     int indexName = 0;
     for (auto &name: msg->name) {
         if (name == "uuv_bluerov2_heavy") {
